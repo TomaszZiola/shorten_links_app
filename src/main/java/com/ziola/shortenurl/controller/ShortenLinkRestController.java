@@ -40,18 +40,22 @@ public class ShortenLinkRestController {
         String linkToSite = link.getLink();
         if (isBlank(linkToSite)){
             throw new LinkException("Link cannot be empty!");
-        } else if (!UrlValidator.getInstance().isValid(link.getLink())) {
+        } else if (!urlValidator.getInstance().isValid(link.getLink())) {
             throw new LinkWrongFormatException("Bad link's format! Make sure to start from https");
         }
     }
 
     @GetMapping(value = "/{link}")
-    public LinkResponse fullLink(@PathVariable("link") String link, HttpServletResponse responseServlet) throws IOException {
+    public LinkResponse fullLink(@PathVariable("link") String link, HttpServletResponse responseServlet)  {
         LinkRequest request = shortenLinkService.findAndUpdate(link);
         LinkResponse response = new LinkResponse();
         response.setFullLengthLink(request.getFullLengthLink());
         response.setVisits(request.getVisits());
-        responseServlet.sendRedirect(request.getFullLengthLink());
+        try {
+            responseServlet.sendRedirect(request.getFullLengthLink());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 
