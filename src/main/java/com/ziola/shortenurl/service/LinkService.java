@@ -1,10 +1,15 @@
 package com.ziola.shortenurl.service;
 
 import com.ziola.shortenurl.domain.LinkRequest;
+import com.ziola.shortenurl.dto.Link;
 import com.ziola.shortenurl.exception.LinkException;
+import com.ziola.shortenurl.exception.LinkWrongFormatException;
 import com.ziola.shortenurl.repository.LinkRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.stereotype.Service;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +64,16 @@ public class LinkService{
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
         return builder.toString();
+    }
+
+    public void checkIfCorrect(Link link) {
+        String[] schemes = {"https"};
+        UrlValidator urlValidator = new UrlValidator(schemes);
+        String linkToSite = link.getLink();
+        if (isBlank(linkToSite)){
+            throw new LinkException("Link cannot be empty!");
+        } else if (!urlValidator.getInstance().isValid(link.getLink())) {
+            throw new LinkWrongFormatException("Bad link's format! Make sure to start from https");
+        }
     }
 }

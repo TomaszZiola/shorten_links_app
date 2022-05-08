@@ -26,23 +26,12 @@ public class ShortenLinkRestController {
 
     @PostMapping(value = "/shorten")
     public LinkWithPassword shortLink(@RequestBody Link link) {
-        checkIfCorrect(link);
+        shortenLinkService.checkIfCorrect(link);
         LinkRequest request = shortenLinkService.createShortenLink(link.getLink());
         LinkWithPassword shortenLink = new LinkWithPassword();
         shortenLink.setLink(request.getShortenLink());
         shortenLink.setPassword(request.getPassword());
         return shortenLink;
-    }
-
-    private void checkIfCorrect(Link link) {
-        String[] schemes = {"https"};
-        UrlValidator urlValidator = new UrlValidator(schemes);
-        String linkToSite = link.getLink();
-        if (isBlank(linkToSite)){
-            throw new LinkException("Link cannot be empty!");
-        } else if (!urlValidator.getInstance().isValid(link.getLink())) {
-            throw new LinkWrongFormatException("Bad link's format! Make sure to start from https");
-        }
     }
 
     @GetMapping(value = "/{link}")
