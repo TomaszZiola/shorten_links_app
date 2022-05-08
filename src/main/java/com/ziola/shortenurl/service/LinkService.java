@@ -67,7 +67,7 @@ public class LinkService{
     }
 
     public void checkIfCorrect(Link link) {
-        String[] schemes = {"https"};
+        String[] schemes = {"http"};
         UrlValidator urlValidator = new UrlValidator(schemes);
         String linkToSite = link.getLink();
         if (isBlank(linkToSite)){
