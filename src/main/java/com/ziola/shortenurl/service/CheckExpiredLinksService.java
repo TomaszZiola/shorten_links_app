@@ -20,7 +20,6 @@ public class CheckExpiredLinksService {
 
     @Scheduled(cron = "0 0 * * * ?")
     public void updateLinks() {
-        LocalDate currentDate = LocalDate.now();
         Iterable<LinkRequest> allLinks = repository.findAll();
         for (LinkRequest shortenLink : allLinks) {
             if (shortenLink.getExpiryDate().isAfter(LocalDate.now())) {

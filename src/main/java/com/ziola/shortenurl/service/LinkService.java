@@ -30,7 +30,7 @@ public class LinkService{
     public LinkRequest findAndUpdate(String link) {
         LinkRequest request = shortenLinkRepository.findByShortenLink(link);
         if (request == null) {
-            throw new LinkException("Nie ma takiego skróconego linku!");
+            throw new LinkException("There's no such shorten link!");
         }else {
             request.updateVisits();
             return shortenLinkRepository.save(request);
